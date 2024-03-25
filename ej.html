@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="style.css">
+
+<title>Generador</title>
+<style>
+    .contenedor {
+        display: flex; /* Utilizamos flexbox para colocar los divs en la misma línea */
+    }
+    .div1, .div2 {
+        width: 50%; /* Cada div ocupa el 50% del ancho del contenedor */
+        
+        padding: 10px; /* Añadimos un poco de relleno para que no estén pegados al borde */
+    }
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+    <div class="div1"align="center">
+       <img src="imagenes/logo_01.png"class="imagenes">
+    </div>
+    <div class="container-lg">
+        
+        <form class="form-group" id="form">
+            <div class="contenedor">
+                <div class="div1">
+                    <label class="form-label">Nombre del Cliente:</label>
+                    <input type="text" class="form-control"id="nombre" name="nombre">
+                    <label class="form-label">Máscara:</label>
+                    <input type="text" class="form-control" id="mascara" name="mascara">
+                    <label class="form-label">Agencia:</label>
+            <input type="text" class="form-control" id="agencia" name="agencia">
+            <label class="form-label">Nombre del documento:</label>
+            <input type="text" class="form-control" id="nombre_doc" name="nombre_doc">
+            <label class="form-label">Fecha de vigencia:</label>
+            <input type="text" class="form-control" id="fecha_vigencia" name="fecha_vigencia">
+            <label class="form-label">Fecha de documento:</label>
+            <input type="text" class="form-control" id="fecha_doc" name="fecha_doc">
+            <label class="form-label">Hora de archivado:</label>
+            <input type="text" class="form-control" id="hora_archivado" name="hora_archivado">
+            <label class="form-label">Número crediticio:</label>
+            <input type="text"class="form-control" id="num_crediticio" name="num_crediticio">
+                </div>
+                <div class="div2">
+                    <label class="form-label">Número del Cliente:</label>
+                    <input type="text" class="form-control"id="num_cli" name="num_cli" >
+                    <label class="form-label">Tipo de documento:</label>
+                    <input type="text" class="form-control" id="tip_doc" name="tip_doc">
+                    <label class="form-label">ID Agencia:</label>
+                    <input type="text" class="form-control"id="id_agencia" name="id_agencia">
+                    <label class="form-label">Número del documento:</label>
+            <input type="text" class="form-control"id="num_doc" name="num_doc">
+            <label class="form-label">Fecha de expiración:</label>
+            <input type="text"class="form-control" id="fecha_expiracion" name="fecha_expiracion">
+            <label class="form-label">Fecha de archivado:</label>
+            <input type="text" class="form-control" id="fecha_archivado" name="fecha_archivado">
+            <label class="form-label">Archivado por:</label>
+            <input type="text" class="form-control" id="archivado_por" name="archivado_por">
+                </div>
+            </div>      
+            <br>
+            <br>
+        <p> <div align="center">
+            <button class="btn btn-success"onclick="generarXML()" input type="submit">Descargar XML</button>
+            <button class="btn btn-danger" onclick="exportToJson()" input type="submit">Descargar JSON</button>
+        </p>
+    </div>
+    <script>
+        function generarXML() {
+            // Capturar el nombre del formulario
+            var nombre = document.getElementById("nombre").value;
+            var num_cli = document.getElementById("num_cli").value;
+            var mascara = document.getElementById("mascara").value;
+            var tip_doc= document.getElementById("tip_doc").value;
+            var agencia= document.getElementById("agencia").value;
+            var id_agencia= document.getElementById("id_agencia").value;
+            var nombre_doc= document.getElementById("nombre_doc").value;
+            var num_doc= document.getElementById("num_doc").value;
+            var fecha_vigencia= document.getElementById("fecha_vigencia").value;
+            var fecha_expiracion= document.getElementById("fecha_expiracion").value;
+            var fecha_doc= document.getElementById("fecha_doc").value;
+            var fecha_archivado= document.getElementById("fecha_archivado").value;
+            var hora_archivado= document.getElementById("hora_archivado").value;
+            var archivado_por= document.getElementById("archivado_por").value;
+            var num_crediticio= document.getElementById("num_crediticio").value;
+
+            // Crear el objeto XML
+            var xmlString = `<?xml version="1.0" encoding="UTF-8"?>
+                <datos>
+                    <nombre>${nombre}</nombre>
+                    <num_cli>${num_cli}</num_cli>
+                    <mascara>${mascara}</mascara>
+                    <tip_doc>${tip_doc}</tip_doc>
+                    <agencia>${agencia}</agencia>
+                    <id_agencia>${id_agencia}</id_agencia>
+                    <nombre_doc>${nombre_doc}</nombre_doc>
+                    <num_doc>${num_doc}</num_doc>
+                    <fecha_vigencia>${fecha_vigencia}</fecha_vigencia>
+                    <fecha_expiracion>${fecha_expiracion}</fecha_expiracion>
+                    <fecha_doc>${fecha_doc}</fecha_doc>
+                    <fecha_archivado>${fecha_archivado}</fecha_archivado>
+                    <hora_archivado>${hora_archivado}</hora_archivado>
+                    <archivado_por>${archivado_por}</archivado_por>
+                    <num_crediticio>${num_crediticio}</num_crediticio>
+                </datos>`;
+
+            // Crear un enlace temporal para descargar el archivo XML
+            var blob = new Blob([xmlString], { type: "text/xml" });
+            var url = window.URL.createObjectURL(blob);
+
+            // Crear un enlace para descargar el archivo XML
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "formulario.xml";
+            document.body.appendChild(a);
+            a.click();
+
+            // Limpiar después de la descarga
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+       //Capturar datos de formulario y setear JSON
+    
+       function exportToJson() {
+        const formData = new FormData(document.getElementById('form'));
+        const jsonObject = {};
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+
+        const jsonString = JSON.stringify(jsonObject, null, 2);
+        // Crear un enlace temporal para descargar el archivo XML
+        var blob = new Blob([jsonString], { type: "text/json" });
+        var url = window.URL.createObjectURL(blob);
+
+        // Crear un enlace para descargar el archivo XML
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "formulario.json";
+        document.body.appendChild(a);
+        a.click();
+
+        // Limpiar después de la descarga
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }     
+    </script>
+        </form>
+    </div>
+    
+</div>
+
+</body>
+</html>
